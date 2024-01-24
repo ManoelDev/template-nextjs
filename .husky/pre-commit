@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+protected_branch="main"
+current_branch=$(git symbolic-ref HEAD | sed -e 's,.*/\(.*\),\1,')
+
+if [ "$current_branch" = "$protected_branch" ]; then
+    echo "Committing directly to the $protected_branch branch is not allowed."
+    exit 1
+fi
+
+npm run check:format
+npm run check:lint
+npm run check:types
+npm run test
